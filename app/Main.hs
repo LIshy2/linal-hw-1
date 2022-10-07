@@ -43,18 +43,17 @@ tr m = go 0 m
     go ind (m : ms) = m !! ind + go (ind + 1) ms
     go _ [] = 0
 
-
 gauss :: Matrix -> Matrix
-gauss m = foldl solveColumn m [0 .. (length (head m) - 2)]
+gauss m = foldl solveColumn m [0 .. (length (head m) - 2)] -- gaus
   where
-    solveColumn mat i = case mRow of
+    solveColumn mat i = case mRow of -- in column i only 1 not zero element
       Nothing -> mat
-      Just row -> row : map (rowToZero row) (filter (/= row) mat)
+      Just row -> row : map (rowToZero row) (filter (/= row) mat) -- all rows that not equals to r, substract r
       where
-        mRow = find (\a -> (a !! i) /= 0) (drop i mat)
-        rowToZero a b = case elb of
-          0 -> b
-          _ -> zipWith (-) (map (* mulb) b) (map (* mula) a)
+        mRow = find (\a -> (a !! i) /= 0) (drop i mat) -- find row with not zero element 
+        rowToZero a b = case elb of -- row a to zero with row b
+          0 -> b -- 
+          _ -> zipWith (-) (map (* mulb) b) (map (* mula) a) -- to lcm 
           where
             ela = a !! i
             elb = b !! i
@@ -62,4 +61,4 @@ gauss m = foldl solveColumn m [0 .. (length (head m) - 2)]
             mulb = lcm ela elb `div` elb
 
 main :: IO ()
-main = print (gauss [[9, 9, -27, 18, 54], [7, -4, -10, 14, 20], [1, -5, 3, 2, -6], [8, -7, -9, 16, 18]])
+main = print (gauss [[1, 0, 0, 1], [1, 0, 0, 1]])
