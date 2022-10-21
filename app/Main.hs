@@ -1,64 +1,50 @@
 module Main where
 
-import Data.List
+import Linear
+import Matrix
 
-type Matrix = [[Int]] -- matrix type
+a = [[-3, 5, -1, -1], [16 - 29, 5, 1], [3, -6, 1, 2]]
 
-type Pos = (Int, Int) -- index type
+x_0 = Eq [(Var 0, 1)]
 
-(|!!|) :: (Integral i1, Integral i2) => [[Int]] -> (i1, i2) -> Int -- get element by index
-m |!!| (x, y) = m `genericIndex` x `genericIndex` y
+x_1 = Eq [(Var 1, 1)]
 
-(|!|) :: (Integral i1) => Matrix -> i1 -> [Int] -- get row by index
-m |!| ind = m `genericIndex` ind
+x_2 = Eq [(Var 2, 1)]
 
-(|+|) :: Matrix -> Matrix -> Matrix -- matrix sum
-_ |+| [] = []
-[] |+| _ = []
-(r1 : rs1) |+| (r2 : rs2) = sumRow r1 r2 : (rs1 |+| rs2)
-  where
-    sumRow = zipWith (+)
+x_3 = Eq [(Var 3, 1)]
 
-(|-|) :: Matrix -> Matrix -> Matrix -- matrix dif
-_ |-| [] = []
-[] |-| _ = []
-(r1 : rs1) |-| (r2 : rs2) = minusRow r1 r2 : (rs1 |+| rs2)
-  where
-    minusRow = zipWith (-)
+x_4 = Eq [(Var 4, 1)]
 
-(|*|) :: Matrix -> Matrix -> Matrix -- matrix mult
-a |*| b = map (map calcCell) indexes
-  where
-    b' = transpose b
-    indexes = [[(x, y) | y <- [0 .. (length b' - 1)]] | x <- [0 .. (length a - 1)]]
-    rowMult a b = sum (zipWith (*) a b)
-    calcCell (i, j) = rowMult (a !! i) (b' !! j)
+x_5 = Eq [(Var 5, 1)]
 
-(*|) :: Int -> Matrix -> Matrix -- matrix mult on scalar
-a *| b = map (map (* a)) b
+x_6 = Eq [(Var 6, 1)]
 
-tr :: Matrix -> Int -- matrix sled
-tr m = go 0 m
-  where
-    go ind (m : ms) = m !! ind + go (ind + 1) ms
-    go _ [] = 0
+x_7 = Eq [(Var 7, 1)]
 
-gauss :: Matrix -> Matrix
-gauss m = foldl solveColumn m [0 .. (length (head m) - 2)] -- gaus
-  where
-    solveColumn mat i = case mRow of -- in column i only 1 not zero element
-      Nothing -> mat
-      Just row -> row : map (rowToZero row) (filter (/= row) mat) -- all rows that not equals to r, substract r
-      where
-        mRow = find (\a -> (a !! i) /= 0) (drop i mat) -- find row with not zero element 
-        rowToZero a b = case elb of -- row a to zero with row b
-          0 -> b -- 
-          _ -> zipWith (-) (map (* mulb) b) (map (* mula) a) -- to lcm 
-          where
-            ela = a !! i
-            elb = b !! i
-            mula = lcm ela elb `div` ela
-            mulb = lcm ela elb `div` elb
+x_8 = Eq [(Var 8, 1)]
+
+x_9 = Eq [(Var 9, 1)]
+
+x_10 = Eq [(Var 10, 1)]
+
+x_11 = Eq [(Var 11, 1)]
+
+zer = Eq [(Free, 0)]
+
+b :: [[LineEq]]
+b = [[x_0, x_1, x_2], [x_3, x_4, x_5], [x_6, x_7, x_8], [x_9, x_10, x_11]]
+
+c = [ [-3, 0, 0, 5, 0, 0, -1, 0, 0, -1, 0, 0, 16],
+    [0, -3, 0, 0, 5, 0, 0, -1, 0, 0, -1, 0, 0],
+    [0, 0, -3, 0, 0, 5, 0, 0, -1, 0, 0, -1, 7],
+    [-13, 0, 0, 5, 0, 0, 1, 0, 0, 0, 0, 0, -84],
+    [0, -13, 0, 0, 5, 0, 0, 1, 0, 0, 0, 0, 10],
+    [0, 0, -13, 0, 0, 5, 0, 0, 1, 0, 0, 0, -56],
+    [3, 0, 0, 6, 0, 0, 1, 0, 0, 2, 0, 0, -18],
+    [0, 3, 0, 0, 6, 0, 0, 1, 0, 0, 2, 0, -4],
+    [0, 0, 3, 0, 0, 6, 0, 0, 1, 0, 0, 2, -7]
+  ]
 
 main :: IO ()
-main = print (gauss [[1, 0, 0, 1], [1, 0, 0, 1]])
+main =
+  print (gauss c)
