@@ -44,8 +44,8 @@ tr m = go 0 m
     go ind (m : ms) = m !! ind + go (ind + 1) ms
     go _ [] = 0
 
-gauss :: Matrix Int -> Matrix Int
-gauss m = foldl solveColumn m [0 .. (length (head m) - 2)] -- gaus
+gauss' :: Int -> Matrix Int -> Matrix Int
+gauss' cols m = foldl solveColumn m [0 .. cols] -- gauss
   where
     solveColumn mat i = case mRow of -- in column i only 1 not zero element
       Nothing -> mat
@@ -60,6 +60,10 @@ gauss m = foldl solveColumn m [0 .. (length (head m) - 2)] -- gaus
             elb = b !! i
             mula = lcm ela elb `div` ela
             mulb = lcm ela elb `div` elb
+
+
+gauss :: Matrix Int -> Matrix Int
+gauss m = gauss' (length (head m) - 2) m
 
 (|*^|) :: Matrix Int -> Matrix LineEq -> Matrix LineEq -- КОТИК В КОРОБКЕ
 a |*^| b = map (map calcCell) indexes
@@ -77,7 +81,6 @@ a |^*| b = map (map calcCell) indexes
     rowMult a b = foldl (^+^) def (zipWith (^*) a b)
     calcCell (i, j) = rowMult (a !! i) (b' !! j)
 
-E n = 
 
 
 -- solveMatrixEquation :: Matrix LineEq -> Matrix LineEq -> Matrix Int
